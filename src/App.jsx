@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import LandingPage from './pages/LandingPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
 import { getRoleHome, getSession } from './utils/auth.js';
 
 /**
@@ -10,6 +13,12 @@ import { getRoleHome, getSession } from './utils/auth.js';
  */
 export default function App() {
   const [session, setSessionState] = useState(() => getSession());
+
+  useEffect(() => {
+    const syncSession = () => setSessionState(getSession());
+    window.addEventListener('writespace-session-change', syncSession);
+    return () => window.removeEventListener('writespace-session-change', syncSession);
+  }, []);
 
   /** Refresh the shell after the navbar removes the persisted session. */
   function handleLogout() {
@@ -20,9 +29,9 @@ export default function App() {
     <>
       {session && <Navbar onLogout={handleLogout} session={session} />}
       <Routes>
-        <Route element={<Landing />} path="/" />
-        <Route element={<SessionRedirect session={session} />} path="/login" />
-        <Route element={<SessionRedirect session={session} />} path="/register" />
+        <Route element={<LandingPage />} path="/" />
+        <Route element={session ? <RouteRedirect session={session} /> : <LoginPage />} path="/login" />
+        <Route element={session ? <RouteRedirect session={session} /> : <RegisterPage />} path="/register" />
         <Route element={<ProtectedRoute session={session}><Workspace /></ProtectedRoute>} path="/blogs" />
         <Route element={<ProtectedRoute session={session}><Workspace /></ProtectedRoute>} path="/blog/:id" />
         <Route element={<ProtectedRoute session={session}><Workspace /></ProtectedRoute>} path="/write" />
@@ -36,10 +45,16 @@ export default function App() {
 }
 
 /**
- * Render the foundational public entry surface.
- * @returns {JSX.Element} Public introduction and entry links.
+ * Redirect a signed-in visitor to their role-specific landing route.
+ * @param {{ session: object }} props Current valid session.
+ * @returns {JSX.Element} Role home redirect.
  */
-function Landing() {
+function RouteRedirect({ session }) {
+  return <Navigate replace to={getRoleHome(session)} />;
+}
+
+/**
+ * Render the shared authenticated workspace base.
   return (
     <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-slate-50 px-6 py-16">
       <section className="w-full max-w-3xl rounded-3xl bg-gradient-to-br from-indigo-600 via-violet-600 to-pink-500 px-8 py-16 text-center text-white shadow-xl sm:px-16">
