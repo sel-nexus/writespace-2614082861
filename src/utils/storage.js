@@ -6,12 +6,28 @@ const USERS_KEY = 'writespace_users';
  * @param {string} key Storage key to read.
  * @returns {Array} Parsed array or an empty array when storage is unavailable or invalid.
  */
+function isRecord(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+/** Reject stored entries whose fields are unsafe for the app's consumers. */
+function isValidRecord(key, value) {
+  if (!isRecord(value)) return false;
+  if (key === POSTS_KEY) {
+    return ['id', 'title', 'content', 'createdAt', 'authorId', 'authorName']
+      .every((field) => typeof value[field] === 'string');
+  }
+  return ['id', 'username', 'displayName', 'password', 'createdAt']
+    .every((field) => typeof value[field] === 'string')
+    && ['admin', 'user'].includes(value.role);
+}
+
 function readArray(key) {
   try {
     const serialized = window.localStorage.getItem(key);
     if (serialized === null) return [];
     const value = JSON.parse(serialized);
-    return Array.isArray(value) ? value : [];
+    return Array.isArray(value) ? value.filter((record) => isValidRecord(key, record)) : [];
   } catch {
     return [];
   }

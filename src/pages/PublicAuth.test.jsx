@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -32,11 +32,11 @@ describe('public discovery and account access', () => {
 
   it('orders latest landing preview by creation date and limits it to three posts', () => {
     savePosts([
-      { id: 'old', title: 'Old story', content: 'Old content', createdAt: '2024-01-01T00:00:00.000Z' },
-      { id: 'new-1', title: 'Newest story', content: 'First newest', createdAt: '2025-01-03T00:00:00.000Z' },
-      { id: 'new-2', title: 'Second story', content: 'Second newest', createdAt: '2025-01-02T00:00:00.000Z' },
-      { id: 'new-3', title: 'Third story', content: 'Third newest', createdAt: '2025-01-01T00:00:00.000Z' },
-      { id: 'new-4', title: 'Fourth story', content: 'Fourth newest', createdAt: '2024-12-31T00:00:00.000Z' },
+      { id: 'old', title: 'Old story', content: 'Old content', createdAt: '2024-01-01T00:00:00.000Z', authorId: 'author', authorName: 'Author' },
+      { id: 'new-1', title: 'Newest story', content: 'First newest', createdAt: '2025-01-03T00:00:00.000Z', authorId: 'author', authorName: 'Author' },
+      { id: 'new-2', title: 'Second story', content: 'Second newest', createdAt: '2025-01-02T00:00:00.000Z', authorId: 'author', authorName: 'Author' },
+      { id: 'new-3', title: 'Third story', content: 'Third newest', createdAt: '2025-01-01T00:00:00.000Z', authorId: 'author', authorName: 'Author' },
+      { id: 'new-4', title: 'Fourth story', content: 'Fourth newest', createdAt: '2024-12-31T00:00:00.000Z', authorId: 'author', authorName: 'Author' },
     ]);
     renderPage(<LandingPage />);
     expect(screen.getByRole('heading', { name: 'Newest story' })).toBeInTheDocument();
@@ -93,11 +93,51 @@ describe('public discovery and account access', () => {
     await user.click(screen.getByRole('button', { name: 'Get Started' }));
     expect(screen.getByText('That username is already taken.')).toBeInTheDocument();
     expect(screen.getByText('Passwords do not match.')).toBeInTheDocument();
-    saveUsers([{ id: 'existing', displayName: 'Dana', username: 'dana', password: 'pass', role: 'user' }]);
+    saveUsers([{ id: 'existing', displayName: 'Dana', username: 'dana', password: 'pass', role: 'user', createdAt: '2025-01-01T00:00:00.000Z' }]);
     await user.clear(screen.getByLabelText('Username'));
     await user.type(screen.getByLabelText('Username'), 'DANA');
     await user.click(screen.getByRole('button', { name: 'Get Started' }));
     expect(screen.getByText('That username is already taken.')).toBeInTheDocument();
+  });
+
+  it('reports an account persistence error and does not create a session when user storage fails', async () => {
+    const user = userEvent.setup();
+    const originalSetItem = Storage.prototype.setItem;
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function setItem(key, value) {
+      if (key === 'writespace_users') throw new DOMException('quota exceeded');
+      return originalSetItem.call(this, key, value);
+    });
+    renderPage(<RegisterPage />);
+    await user.type(screen.getByLabelText('Display Name'), 'Dana Writer');
+    await user.type(screen.getByLabelText('Username'), 'dana');
+    await user.type(screen.getByLabelText('Password'), 'demo-pass');
+    await user.type(screen.getByLabelText('Confirm Password'), 'demo-pass');
+    await user.click(screen.getByRole('button', { name: 'Get Started' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Unable to save your account.');
+    expect(window.localStorage.getItem('writespace_users')).toBeNull();
+    expect(window.localStorage.getItem(sessionKey)).toBeNull();
+    setItemSpy.mockRestore();
+  });
+
+  it('reports a session persistence error when account storage succeeds but session storage fails', async () => {
+    const user = userEvent.setup();
+    const originalSetItem = Storage.prototype.setItem;
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function setItem(key, value) {
+      if (key === sessionKey) throw new DOMException('quota exceeded');
+      return originalSetItem.call(this, key, value);
+    });
+    renderPage(<RegisterPage />);
+    await user.type(screen.getByLabelText('Display Name'), 'Dana Writer');
+    await user.type(screen.getByLabelText('Username'), 'dana');
+    await user.type(screen.getByLabelText('Password'), 'demo-pass');
+    await user.type(screen.getByLabelText('Confirm Password'), 'demo-pass');
+    await user.click(screen.getByRole('button', { name: 'Get Started' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Your account was created, but the session could not be saved.');
+    expect(JSON.parse(window.localStorage.getItem('writespace_users'))).toEqual([
+      expect.objectContaining({ username: 'dana', displayName: 'Dana Writer', role: 'user' }),
+    ]);
+    expect(window.localStorage.getItem(sessionKey)).toBeNull();
+    setItemSpy.mockRestore();
   });
 
   it('renders the complete login route, updates navigation after authentication, and sends admin to its home', async () => {
@@ -112,7 +152,7 @@ describe('public discovery and account access', () => {
     await user.type(screen.getByLabelText('Username'), 'admin');
     await user.type(screen.getByLabelText('Password'), 'admin');
     await user.click(screen.getByRole('button', { name: 'Login' }));
-    expect(await screen.findByRole('heading', { name: 'Your writing space' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Good to see you, Admin.' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Users' })).toBeInTheDocument();
   });
 });

@@ -1,0 +1,249 @@
+{
+  "communities": {
+    "0": [
+      "e2e_foundation_spec",
+      "package",
+      "package_name",
+      "package_private",
+      "package_type",
+      "package_version",
+      "playwright_config",
+      "ref_autoprefixer",
+      "ref_jsdom",
+      "ref_playwright_test",
+      "ref_tailwindcss",
+      "ref_testing_library_jest_dom",
+      "ref_testing_library_react",
+      "ref_testing_library_user_event",
+      "ref_vite",
+      "ref_vitejs_plugin_react",
+      "ref_vitest",
+      "src_components_protectedroute_test",
+      "src_components_protectedroute_test_admin",
+      "src_components_protectedroute_test_renderprotected",
+      "src_components_protectedroute_test_user",
+      "tests_setup",
+      "vite_config",
+      "vitest_config"
+    ],
+    "1": [
+      "ref_prop_types",
+      "ref_react_router_dom",
+      "src_components_avatar",
+      "src_components_avatar_avatar",
+      "src_components_avatar_getavatar",
+      "src_components_navbar",
+      "src_components_navbar_navbar",
+      "src_components_navbar_navbar_logout",
+      "src_components_navbar_navigation",
+      "src_components_navbar_test",
+      "src_components_navbar_test_adminsession",
+      "src_components_navbar_test_rendernavigation",
+      "src_components_navbar_test_usersession",
+      "src_utils_auth",
+      "src_utils_auth_clearsession",
+      "src_utils_auth_getrolehome",
+      "src_utils_auth_getsession",
+      "src_utils_auth_sessionkey",
+      "src_utils_auth_setsession",
+      "src_utils_auth_test",
+      "src_utils_auth_test_usersession"
+    ],
+    "2": [
+      "ref_react",
+      "ref_react_dom",
+      "src_app",
+      "src_app_app",
+      "src_app_app_handlelogout",
+      "src_app_landing",
+      "src_app_loginentry",
+      "src_app_routenotfound",
+      "src_app_sessionredirect",
+      "src_app_workspace",
+      "src_components_protectedroute",
+      "src_components_protectedroute_protectedroute",
+      "src_index",
+      "src_main"
+    ],
+    "3": [
+      "package_dependencies",
+      "package_dependencies_autoprefixer",
+      "package_dependencies_prop_types",
+      "package_dependencies_react",
+      "package_dependencies_react_dom",
+      "package_dependencies_react_router_dom",
+      "package_dependencies_tailwindcss",
+      "package_dependencies_vite",
+      "package_dependencies_vitejs_plugin_react"
+    ],
+    "4": [
+      "src_utils_storage",
+      "src_utils_storage_getposts",
+      "src_utils_storage_getusers",
+      "src_utils_storage_readarray",
+      "src_utils_storage_saveposts",
+      "src_utils_storage_saveusers",
+      "src_utils_storage_storagekeys",
+      "src_utils_storage_test",
+      "src_utils_storage_writearray"
+    ],
+    "5": [
+      "package_devdependencies",
+      "package_devdependencies_jsdom",
+      "package_devdependencies_playwright_test",
+      "package_devdependencies_testing_library_jest_dom",
+      "package_devdependencies_testing_library_react",
+      "package_devdependencies_testing_library_user_event",
+      "package_devdependencies_vitest"
+    ],
+    "6": [
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_dev",
+      "package_scripts_e2e",
+      "package_scripts_test",
+      "package_scripts_test_watch"
+    ],
+    "7": [
+      "developer_index_local_thoughtful_writing_space",
+      "developer_index_writespace",
+      "src_main_main_jsx"
+    ],
+    "8": [
+      "vercel",
+      "vercel_rewrites"
+    ],
+    "9": [
+      "postcss_config"
+    ],
+    "10": [
+      "tailwind_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.10144927536231885,
+    "1": 0.1761904761904762,
+    "2": 0.24175824175824176,
+    "3": 0.2222222222222222,
+    "4": 0.4722222222222222,
+    "5": 0.2857142857142857,
+    "6": 0.3333333333333333,
+    "7": 0.6666666666666666,
+    "8": 1.0,
+    "9": 1.0,
+    "10": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_app_app",
+      "label": "App()",
+      "degree": 10
+    },
+    {
+      "id": "src_components_navbar_navbar",
+      "label": "Navbar()",
+      "degree": 8
+    },
+    {
+      "id": "ref_react_router_dom",
+      "label": "react-router-dom",
+      "degree": 7
+    },
+    {
+      "id": "ref_vitest",
+      "label": "vitest",
+      "degree": 7
+    },
+    {
+      "id": "package_scripts",
+      "label": "scripts",
+      "degree": 6
+    },
+    {
+      "id": "src_components_protectedroute_protectedroute",
+      "label": "ProtectedRoute()",
+      "degree": 5
+    },
+    {
+      "id": "src_utils_auth_clearsession",
+      "label": "clearSession()",
+      "degree": 5
+    },
+    {
+      "id": "ref_prop_types",
+      "label": "prop-types",
+      "degree": 4
+    },
+    {
+      "id": "ref_react",
+      "label": "react",
+      "degree": 4
+    },
+    {
+      "id": "ref_testing_library_react",
+      "label": "@testing-library/react",
+      "degree": 4
+    }
+  ],
+  "surprises": [
+    {
+      "source": "renderProtected()",
+      "target": "ProtectedRoute()",
+      "source_files": [
+        "src/components/ProtectedRoute.test.jsx",
+        "src/components/ProtectedRoute.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities; peripheral node `renderProtected()` unexpectedly reaches hub `ProtectedRoute()`"
+    },
+    {
+      "source": "App()",
+      "target": "Navbar()",
+      "source_files": [
+        "src/App.jsx",
+        "src/components/Navbar.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "App()",
+      "target": "getSession()",
+      "source_files": [
+        "src/App.jsx",
+        "src/utils/auth.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "SessionRedirect()",
+      "target": "getRoleHome()",
+      "source_files": [
+        "src/App.jsx",
+        "src/utils/auth.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "renderNavigation()",
+      "target": "Navbar()",
+      "source_files": [
+        "src/components/Navbar.test.jsx",
+        "src/components/Navbar.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "peripheral node `renderNavigation()` unexpectedly reaches hub `Navbar()`"
+    }
+  ],
+  "tokens": {
+    "input": 185,
+    "output": 236
+  }
+}

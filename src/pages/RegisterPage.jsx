@@ -71,8 +71,35 @@ export default function RegisterPage() {
   const field = (name, label, type = 'text', autoComplete = name) => (
     <div>
       <label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor={`register-${name}`}>{label}</label>
-      <input aria-describedby={errors[name] ? `register-${name}-error` : undefined} aria-invalid={Boolean(errors[name])} aria-required="true" autoComplete={autoComplete} className={`w-full rounded-lg border px-3.5 py-3 text-slate-900 outline-none transition-colors focus:ring-2 ${errors[name] ? 'border-red-500 focus:border-red-500 focus:ring-red-100' : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-200'}`} id={`register-${name}`} name={name} onChange={updateField} required type={type} value={values[name]} />
-      {errors[name] && <p aria-live="assertive" className="mt-1.5 text-sm text-red-700" id={`register-${name}-error`} role="alert">{errors[name]}</p>}
+      <input
+        aria-describedby={errors[name] ? `register-${name}-error` : undefined}
+        aria-invalid={Boolean(errors[name])}
+        aria-required="true"
+        autoComplete={autoComplete}
+        className={
+          'w-full rounded-lg border px-3.5 py-3 text-slate-900 outline-none transition-colors '
+          + 'focus:ring-2 '
+          + (errors[name]
+            ? 'border-red-500 focus:border-red-500 focus:ring-red-100'
+            : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-200')
+        }
+        id={`register-${name}`}
+        name={name}
+        onChange={updateField}
+        required
+        type={type}
+        value={values[name]}
+      />
+      {errors[name] && (
+        <p
+          aria-live="assertive"
+          className="mt-1.5 text-sm text-red-700"
+          id={`register-${name}-error`}
+          role="alert"
+        >
+          {errors[name]}
+        </p>
+      )}
     </div>
   );
 
@@ -88,10 +115,32 @@ export default function RegisterPage() {
           {field('username', 'Username', 'text', 'username')}
           {field('password', 'Password', 'password', 'new-password')}
           {field('confirmPassword', 'Confirm Password', 'password', 'new-password')}
-          {storageError && <p aria-live="assertive" className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700" role="alert">{storageError}</p>}
-          <button className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2" type="submit">Get Started</button>
+          {storageError && (
+            <p
+              aria-live="assertive"
+              className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700"
+              role="alert"
+            >
+              {storageError}
+            </p>
+          )}
+          <button
+            className={
+              'w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white shadow-sm '
+              + 'transition-colors hover:bg-indigo-700 focus-visible:outline-none '
+              + 'focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2'
+            }
+            type="submit"
+          >
+            Get Started
+          </button>
         </form>
-        <p className="mt-6 text-center text-sm text-slate-600">Already have an account? <Link className="font-semibold text-indigo-700 underline underline-offset-2" to="/login">Login</Link></p>
+        <p className="mt-6 text-center text-sm text-slate-600">
+          Already have an account?{' '}
+          <Link className="font-semibold text-indigo-700 underline underline-offset-2" to="/login">
+            Login
+          </Link>
+        </p>
         <p className="mt-4 text-center text-xs text-slate-500">Local demo only. Do not use a real password.</p>
       </section>
     </main>

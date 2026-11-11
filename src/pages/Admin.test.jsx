@@ -13,7 +13,15 @@ const sampleUser = { id: 'reader-1', displayName: 'Reader One', username: 'reade
 const samplePost = { id: 'post-1', title: 'A local story', content: 'Story text.', createdAt: '2025-01-02T00:00:00.000Z', authorId: 'reader-1', authorName: 'Reader One', authorRole: 'user' };
 
 function renderRoute(path, page) {
-  return render(<MemoryRouter initialEntries={[path]}><Routes><Route element={page} path={path} /><Route element={<p>Blogs destination</p>} path="/blogs" /><Route element={<p>Login destination</p>} path="/login" /></Routes></MemoryRouter>);
+  return render(
+    <MemoryRouter initialEntries={[path]}>
+      <Routes>
+        <Route element={page} path={path} />
+        <Route element={<p>Blogs destination</p>} path="/blogs" />
+        <Route element={<p>Login destination</p>} path="/login" />
+      </Routes>
+    </MemoryRouter>,
+  );
 }
 
 describe('administrator oversight', () => {

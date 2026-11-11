@@ -48,17 +48,66 @@ export default function LoginPage() {
         <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor="login-username">Username</label>
-            <input aria-invalid={Boolean(error)} aria-required="true" autoComplete="username" className="w-full rounded-lg border border-slate-300 px-3.5 py-3 text-slate-900 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="login-username" onChange={(event) => setUsername(event.target.value)} required value={username} />
+            <input
+              aria-invalid={Boolean(error)}
+              aria-required="true"
+              autoComplete="username"
+              className={
+                'w-full rounded-lg border border-slate-300 px-3.5 py-3 text-slate-900 '
+                + 'outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200'
+              }
+              id="login-username"
+              onChange={(event) => setUsername(event.target.value)}
+              required
+              value={username}
+            />
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor="login-password">Password</label>
-            <input aria-invalid={Boolean(error)} aria-required="true" autoComplete="current-password" className="w-full rounded-lg border border-slate-300 px-3.5 py-3 text-slate-900 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="login-password" onChange={(event) => setPassword(event.target.value)} required type="password" value={password} />
+            <input
+              aria-invalid={Boolean(error)}
+              aria-required="true"
+              autoComplete="current-password"
+              className={
+                'w-full rounded-lg border border-slate-300 px-3.5 py-3 text-slate-900 '
+                + 'outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200'
+              }
+              id="login-password"
+              onChange={(event) => setPassword(event.target.value)}
+              required
+              type="password"
+              value={password}
+            />
           </div>
-          {error && <p aria-live="assertive" className="rounded-lg bg-red-50 px-3 py-2.5 text-sm font-medium text-red-700" role="alert">{error}</p>}
-          <button className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2" type="submit">Login</button>
+          {error && (
+            <p
+              aria-live="assertive"
+              className="rounded-lg bg-red-50 px-3 py-2.5 text-sm font-medium text-red-700"
+              role="alert"
+            >
+              {error}
+            </p>
+          )}
+          <button
+            className={
+              'w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white shadow-sm '
+              + 'transition-colors hover:bg-indigo-700 focus-visible:outline-none '
+              + 'focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2'
+            }
+            type="submit"
+          >
+            Login
+          </button>
         </form>
-        <p className="mt-6 text-center text-sm text-slate-600">New to WriteSpace? <Link className="font-semibold text-indigo-700 underline underline-offset-2" to="/register">Register</Link></p>
-        <p className="mt-4 rounded-lg bg-indigo-50 px-3 py-2 text-center text-xs text-indigo-800">Demo administrator: <strong>admin</strong> / <strong>admin</strong></p>
+        <p className="mt-6 text-center text-sm text-slate-600">
+          New to WriteSpace?{' '}
+          <Link className="font-semibold text-indigo-700 underline underline-offset-2" to="/register">
+            Register
+          </Link>
+        </p>
+        <p className="mt-4 rounded-lg bg-indigo-50 px-3 py-2 text-center text-xs text-indigo-800">
+          Demo administrator: <strong>admin</strong> / <strong>admin</strong>
+        </p>
       </section>
     </main>
   );

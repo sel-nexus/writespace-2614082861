@@ -36,7 +36,15 @@ export default function ReadBlog() {
 
   return (
     <main className="mx-auto min-h-[calc(100vh-4rem)] max-w-4xl px-5 py-12 sm:px-8 sm:py-16">
-      <Link className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-700 hover:text-indigo-900 focus-visible:outline-none focus-visible:underline" to="/blogs">← Back to All Posts</Link>
+      <Link
+        className={
+          'inline-flex items-center gap-2 text-sm font-semibold text-indigo-700 '
+          + 'hover:text-indigo-900 focus-visible:outline-none focus-visible:underline'
+        }
+        to="/blogs"
+      >
+        ← Back to All Posts
+      </Link>
       <article className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 sm:p-10">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-indigo-600">A WriteSpace story</p>
         <h1 className="mt-4 text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">{post.title}</h1>
@@ -49,8 +57,25 @@ export default function ReadBlog() {
         <div className="mt-8 whitespace-pre-wrap break-words text-lg leading-8 text-slate-700">{post.content}</div>
         {canManage && (
           <div className="mt-10 flex flex-wrap gap-3 border-t border-slate-100 pt-6">
-            <Link className="rounded-lg border border-indigo-200 bg-white px-4 py-2.5 font-semibold text-indigo-700 hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" to={`/edit/${post.id}`}>Edit post</Link>
-            <button className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 font-semibold text-red-700 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500" onClick={handleDelete} type="button">Delete post</button>
+            <Link
+              className={
+                'rounded-lg border border-indigo-200 bg-white px-4 py-2.5 font-semibold text-indigo-700 '
+                + 'hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500'
+              }
+              to={`/edit/${post.id}`}
+            >
+              Edit post
+            </Link>
+            <button
+              className={
+                'rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 font-semibold text-red-700 '
+                + 'hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500'
+              }
+              onClick={handleDelete}
+              type="button"
+            >
+              Delete post
+            </button>
           </div>
         )}
       </article>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LandingPage from './pages/LandingPage.jsx';
@@ -11,6 +11,7 @@ import WriteBlog from './pages/WriteBlog.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import UserManagement from './pages/UserManagement.jsx';
 import { getRoleHome, getSession } from './utils/auth.js';
+import { getPosts } from './utils/storage.js';
 
 /**
  * Render the WriteSpace route table and synchronize local identity changes.
@@ -18,6 +19,8 @@ import { getRoleHome, getSession } from './utils/auth.js';
  */
 export default function App() {
   const [session, setSessionState] = useState(() => getSession());
+  const { pathname } = useLocation();
+  const pageTitle = resolvePageTitle(pathname);
 
   useEffect(() => {
     const syncSession = () => setSessionState(getSession());
@@ -32,6 +35,7 @@ export default function App() {
 
   return (
     <>
+      <PageTitle title={pageTitle} />
       {session && <Navbar onLogout={handleLogout} session={session} />}
       <Routes>
         <Route element={<LandingPage />} path="/" />
@@ -47,6 +51,32 @@ export default function App() {
       </Routes>
     </>
   );
+}
+
+/** Resolve a meaningful document title for the current route and stored resource. */
+function resolvePageTitle(pathname) {
+  if (pathname === '/') return 'WriteSpace | Your thoughts. Your space.';
+  if (pathname === '/login') return 'Log in | WriteSpace';
+  if (pathname === '/register') return 'Create account | WriteSpace';
+  if (pathname === '/blogs') return 'All Blogs | WriteSpace';
+  if (pathname === '/write') return 'Write a post | WriteSpace';
+  if (pathname === '/admin') return 'Administrator overview | WriteSpace';
+  if (pathname === '/users') return 'Manage Users | WriteSpace';
+  const postMatch = pathname.match(/^\/blog\/([^/]+)$/);
+  if (postMatch) {
+    const post = getPosts().find((entry) => entry.id === decodeURIComponent(postMatch[1]));
+    return post ? `${post.title} | WriteSpace` : 'Post not found | WriteSpace';
+  }
+  if (/^\/edit\/[^/]+$/.test(pathname)) return 'Edit post | WriteSpace';
+  return 'Page not found | WriteSpace';
+}
+
+/** Keep the browser tab title synchronized with the active route. */
+function PageTitle({ title }) {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+  return null;
 }
 
 /**

@@ -37,7 +37,15 @@ export default function WriteBlog() {
     const timestamp = new Date().toISOString();
     const record = existingPost
       ? { ...existingPost, title: title.trim(), content: content.trim(), updatedAt: timestamp }
-      : { id: crypto.randomUUID(), title: title.trim(), content: content.trim(), createdAt: timestamp, authorId: session.userId, authorName: session.displayName, authorRole: session.role };
+      : {
+          id: crypto.randomUUID(),
+          title: title.trim(),
+          content: content.trim(),
+          createdAt: timestamp,
+          authorId: session.userId,
+          authorName: session.displayName,
+          authorRole: session.role,
+        };
     const nextPosts = existingPost ? existingPosts.map((post) => post.id === id ? record : post) : [record, ...existingPosts];
     if (!savePosts(nextPosts)) {
       setSaveError('Unable to save this post. Check browser storage and try again.');
@@ -70,7 +78,13 @@ export default function WriteBlog() {
             aria-describedby={errors.title ? 'post-title-error' : undefined}
             aria-invalid={Boolean(errors.title)}
             aria-required="true"
-            className={`w-full rounded-lg border px-4 py-3 text-lg font-semibold text-slate-900 outline-none transition-colors focus:ring-2 ${errors.title ? 'border-red-500 focus:ring-red-100' : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-100'}`}
+            className={
+              'w-full rounded-lg border px-4 py-3 text-lg font-semibold text-slate-900 '
+              + 'outline-none transition-colors focus:ring-2 '
+              + (errors.title
+                ? 'border-red-500 focus:ring-red-100'
+                : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-100')
+            }
             id="post-title"
             maxLength={160}
             onChange={(event) => setTitle(event.target.value)}
@@ -100,7 +114,13 @@ export default function WriteBlog() {
             aria-describedby={errors.content ? 'post-content-error' : undefined}
             aria-invalid={Boolean(errors.content)}
             aria-required="true"
-            className={`min-h-64 w-full resize-y rounded-lg border px-4 py-3 leading-7 text-slate-800 outline-none transition-colors focus:ring-2 ${errors.content ? 'border-red-500 focus:ring-red-100' : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-100'}`}
+            className={
+              'min-h-64 w-full resize-y rounded-lg border px-4 py-3 leading-7 text-slate-800 '
+              + 'outline-none transition-colors focus:ring-2 '
+              + (errors.content
+                ? 'border-red-500 focus:ring-red-100'
+                : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-100')
+            }
             id="post-content"
             maxLength={MAX_CONTENT_LENGTH}
             onChange={(event) => setContent(event.target.value)}
@@ -130,13 +150,20 @@ export default function WriteBlog() {
         )}
         <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <Link
-            className="rounded-lg px-4 py-3 text-center font-semibold text-slate-600 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+            className={
+              'rounded-lg px-4 py-3 text-center font-semibold text-slate-600 hover:bg-slate-100 '
+              + 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400'
+            }
             to={existingPost ? `/blog/${existingPost.id}` : '/blogs'}
           >
             Cancel
           </Link>
           <button
-            className="rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+            className={
+              'rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white shadow-sm '
+              + 'transition-colors hover:bg-indigo-700 focus-visible:outline-none '
+              + 'focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2'
+            }
             type="submit"
           >
             {existingPost ? 'Save changes' : 'Publish post'}

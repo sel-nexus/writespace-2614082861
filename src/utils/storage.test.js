@@ -10,8 +10,8 @@ describe('local storage data helpers', () => {
   });
 
   it('persists and returns valid post and user arrays', () => {
-    const posts = [{ id: 'post-1', title: 'First' }];
-    const users = [{ id: 'user-1', username: 'reader' }];
+    const posts = [{ id: 'post-1', title: 'First', content: 'Words', createdAt: '2025-01-01T00:00:00.000Z', authorId: 'user-1', authorName: 'Reader' }];
+    const users = [{ id: 'user-1', username: 'reader', displayName: 'Reader', password: 'local-only', role: 'user', createdAt: '2025-01-01T00:00:00.000Z' }];
     expect(savePosts(posts)).toBe(true);
     expect(saveUsers(users)).toBe(true);
     expect(getPosts()).toEqual(posts);
@@ -24,6 +24,15 @@ describe('local storage data helpers', () => {
     window.localStorage.setItem(storageKeys.users, JSON.stringify({ username: 'reader' }));
     expect(getPosts()).toEqual([]);
     expect(getUsers()).toEqual([]);
+  });
+
+  it('filters null, primitive, and malformed records from stored arrays', () => {
+    const validPost = { id: 'p-1', title: 'Story', content: 'Text', createdAt: '2025-01-01T00:00:00.000Z', authorId: 'u-1', authorName: 'Reader' };
+    const validUser = { id: 'u-1', username: 'reader', displayName: 'Reader', password: 'local-only', role: 'user', createdAt: '2025-01-01T00:00:00.000Z' };
+    window.localStorage.setItem(storageKeys.posts, JSON.stringify([validPost, null, 17, { ...validPost, createdAt: 42 }]));
+    window.localStorage.setItem(storageKeys.users, JSON.stringify([validUser, null, 'bad-record', { ...validUser, role: 'superuser' }]));
+    expect(getPosts()).toEqual([validPost]);
+    expect(getUsers()).toEqual([validUser]);
   });
 
   it('returns an empty array when browser storage throws during a read', () => {
